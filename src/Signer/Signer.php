@@ -36,7 +36,13 @@ class Signer
 
         $body = $method . "\n" . $this->generateHeaders($headers) . '/' . $bucket . $object;
 
-        $signature = base64_encode(hash_hmac('sha1', $body, $this->config->getSecret(), true));
+        return base64_encode(hash_hmac('sha1', $body, $this->config->getSecret(), true));
+    }
+
+    public function signUrl(string $bucket, string $object, float $timeout = 60, $method = Client::HTTP_GET)
+    {
+        $hostname = $this->getHostname($bucket);
+        $signature = $this->sign($bucket, $object, $timeout, $method);
 
         $query = [
             Client::OSS_URL_ACCESS_KEY_ID => $this->config->getKey(),
