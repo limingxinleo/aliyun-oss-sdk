@@ -1,5 +1,5 @@
-# component-creater
+# Aliyun OSS SDK
 
 ```
-composer create-project hyperf/component-creater
+composer require limingxinleo/aliyun-oss-sdk
 ```
