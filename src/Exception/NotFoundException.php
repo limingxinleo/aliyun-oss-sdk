@@ -9,17 +9,8 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
-namespace HyperfTest\Cases;
+namespace Fan\OSS\Exception;
 
-use PHPUnit\Framework\TestCase;
-
-/**
- * Class AbstractTestCase.
- */
-abstract class AbstractTestCase extends TestCase
+class NotFoundException extends \RuntimeException
 {
-    protected function tearDown(): void
-    {
-        \Mockery::close();
-    }
 }

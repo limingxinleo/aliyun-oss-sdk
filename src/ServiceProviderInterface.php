@@ -9,17 +9,14 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
-namespace HyperfTest\Cases;
+namespace Fan\OSS;
 
-use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
 
-/**
- * Class AbstractTestCase.
- */
-abstract class AbstractTestCase extends TestCase
+interface ServiceProviderInterface
 {
-    protected function tearDown(): void
-    {
-        \Mockery::close();
-    }
+    /**
+     * @return mixed
+     */
+    public function __invoke(ContainerInterface $container, Client $client);
 }
