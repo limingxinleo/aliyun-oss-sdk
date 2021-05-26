@@ -30,6 +30,13 @@ class Client implements ClientInterface
 
     protected $providers = [];
 
+    /**
+     * @param $config = [
+     *     'key' => '', // AccessKeyId
+     *     'secret' => '', // AccessSecret
+     *     'endpoint' => '', // Endpoint
+     * ]
+     */
     public function __construct(ContainerInterface $container, array $config = [])
     {
         $this->container = $container;
