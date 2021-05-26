@@ -68,8 +68,10 @@ class Client implements ClientInterface
         if ($endpoint = $config['endpoint'] ?? null) {
             if (strpos($endpoint, 'http://') === 0) {
                 $endpoint = substr($endpoint, strlen('http://'));
+                $config['schema'] = 'http';
             } elseif (strpos($endpoint, 'https://') === 0) {
                 $endpoint = substr($endpoint, strlen('https://'));
+                $config['schema'] = 'https';
             }
 
             $config['endpoint'] = $endpoint;

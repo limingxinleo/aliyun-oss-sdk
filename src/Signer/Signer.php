@@ -25,10 +25,18 @@ class Signer
 
     public function sign(string $bucket, string $object, float $timeout = 60, $method = Client::HTTP_GET)
     {
+        $bucket = ltrim($bucket, '/');
+
         $timeout = time() + $timeout;
         $hostname = $this->getHostname($bucket);
-        $headers = $this->getHeaders($hostname, (string) $timeout);
-        $signature = base64_encode(hash_hmac('sha1', $method . "\n" . $this->generateHeaders($headers), $this->config->getKey(), true));
+        $headers = $this->getHeaders($hostname, (string) $timeout, [
+            Client::OSS_CONTENT_TYPE => '',
+        ]);
+        $object = $this->generateResourceUri($object);
+
+        $body = $method . "\n" . $this->generateHeaders($headers) . '/' . $bucket . $object;
+
+        $signature = base64_encode(hash_hmac('sha1', $body, $this->config->getSecret(), true));
 
         $query = [
             Client::OSS_URL_ACCESS_KEY_ID => $this->config->getKey(),
@@ -36,7 +44,12 @@ class Signer
             Client::OSS_URL_SIGNATURE => $signature,
         ];
 
-        return $hostname . $this->generateResourceUri($object) . '?' . http_build_query($query);
+        return $this->getSchema() . '://' . $hostname . $object . '?' . http_build_query($query);
+    }
+
+    public function getSchema(): string
+    {
+        return $this->config->get('schema', 'http');
     }
 
     public function getHostname(string $bucket)
