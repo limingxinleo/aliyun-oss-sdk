@@ -23,26 +23,27 @@ class Signer
         $this->config = $config;
     }
 
-    public function sign(string $bucket, string $object, float $timeout = 60, $method = Client::HTTP_GET)
+    public function sign(string $bucket, string $object, $method = Client::HTTP_GET, array $headers = []): array
     {
         $bucket = ltrim($bucket, '/');
-
-        $timeout = time() + $timeout;
         $hostname = $this->getHostname($bucket);
-        $headers = $this->getHeaders($hostname, (string) $timeout, [
-            Client::OSS_CONTENT_TYPE => '',
-        ]);
+        $headers = $this->getHeaders($hostname, $headers);
         $object = $this->generateResourceUri($object);
 
         $body = $method . "\n" . $this->generateHeaders($headers) . '/' . $bucket . $object;
 
-        return base64_encode(hash_hmac('sha1', $body, $this->config->getSecret(), true));
+        $signature = base64_encode(hash_hmac('sha1', $body, $this->config->getSecret(), true));
+
+        return [$hostname, $object, $signature];
     }
 
     public function signUrl(string $bucket, string $object, float $timeout = 60, $method = Client::HTTP_GET)
     {
-        $hostname = $this->getHostname($bucket);
-        $signature = $this->sign($bucket, $object, $timeout, $method);
+        $timeout = strval(time() + $timeout);
+        [$hostname, $object, $signature] = $this->sign($bucket, $object, $method, [
+            Client::OSS_CONTENT_TYPE => '',
+            Client::OSS_DATE => $timeout,
+        ]);
 
         $query = [
             Client::OSS_URL_ACCESS_KEY_ID => $this->config->getKey(),
@@ -91,12 +92,12 @@ class Signer
         return $result;
     }
 
-    public function getHeaders(string $hostname, string $date = null, array $headers = []): array
+    public function getHeaders(string $hostname, array $headers = []): array
     {
         return array_merge([
             Client::OSS_CONTENT_MD5 => '',
             Client::OSS_CONTENT_TYPE => Client::DEFAULT_CONTENT_TYPE,
-            Client::OSS_DATE => $date ?: gmdate('D, d M Y H:i:s \G\M\T'),
+            Client::OSS_DATE => gmdate('D, d M Y H:i:s \G\M\T'),
             Client::OSS_HOST => $hostname,
         ], $headers);
     }

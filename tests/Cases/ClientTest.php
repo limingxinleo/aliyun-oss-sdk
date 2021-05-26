@@ -38,12 +38,12 @@ class ClientTest extends AbstractTestCase
     {
         $container = ContainerStub::mockContainer();
         $client = new Client($container, [
-            'key' => '123123123123',
-            'secret' => 'abcdabcdabcabcabc',
+            'key' => '123',
+            'secret' => '123',
             'endpoint' => 'http://oss-cn-shanghai.aliyuncs.com',
         ]);
 
-        $res = $client->signer->sign('test', 'test/test.json');
+        $res = $client->signer->signUrl('test', 'user_report_collection/online/101.json');
 
         $this->assertIsString($res);
     }
