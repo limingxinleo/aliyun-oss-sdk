@@ -49,10 +49,10 @@ class Uploader
 
         $uri = $this->signer->getSchema() . '://' . $hostname . $object;
 
-        return $this->client()->request('PUT', $uri, array_merge([
+        return $this->client()->request('PUT', $uri, array_merge($options, [
             'headers' => $headers,
             'body' => $content,
-        ], $options));
+        ]));
     }
 
     protected function getMimeType(string $object)
