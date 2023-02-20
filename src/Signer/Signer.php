@@ -34,7 +34,7 @@ class Signer
 
         $signature = base64_encode(hash_hmac('sha1', $body, $this->config->getSecret(), true));
 
-        return [$hostname, $object, $signature];
+        return [$hostname, $object, $signature, $headers];
     }
 
     public function signUrl(string $bucket, string $object, float $timeout = 60, $method = Client::HTTP_GET)
@@ -79,7 +79,7 @@ class Signer
 
         $result = '';
         foreach ($headers as $key => $value) {
-            $value = str_replace(["\r", "\n"], '', $value);
+            $value = str_replace(["\r", "\n"], '', (string) $value);
             $key = strtolower($key);
 
             if (in_array($key, ['content-md5', 'content-type', 'date'])) {

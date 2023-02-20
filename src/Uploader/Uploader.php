@@ -11,8 +11,12 @@ declare(strict_types=1);
  */
 namespace Fan\OSS\Uploader;
 
+use Fan\OSS\Client as OSSClient;
 use Fan\OSS\Kernel\Config;
 use Fan\OSS\Signer\Signer;
+use Fan\OSS\Util\MimeTypes;
+use GuzzleHttp\Client;
+use Psr\Http\Message\ResponseInterface;
 
 class Uploader
 {
@@ -24,5 +28,40 @@ class Uploader
     {
         $this->config = $config;
         $this->signer = $signer;
+    }
+
+    /**
+     * @param mixed $content 待上传的内容
+     */
+    public function put(string $bucket, string $object, $content, array $options = []): ResponseInterface
+    {
+        if (! isset($options['headers']['Content-Length']) && is_string($content)) {
+            $options['headers']['Content-Length'] = strlen($content);
+        }
+
+        if (! isset($options['Content-Type'])) {
+            $options['headers']['Content-Type'] = $this->getMimeType($object);
+        }
+
+        [$hostname, $object, $signature, $headers] = $this->signer->sign($bucket, $object, 'PUT', $options['headers'] ?? []);
+
+        $headers[OSSClient::OSS_AUTHORIZATION] = 'OSS ' . $this->config->getKey() . ':' . $signature;
+
+        $uri = $this->signer->getSchema() . '://' . $hostname . $object;
+
+        return $this->client()->request('PUT', $uri, array_merge([
+            'headers' => $headers,
+            'body' => $content,
+        ], $options));
+    }
+
+    protected function getMimeType(string $object)
+    {
+        return MimeTypes::getMimetype($object) ?? 'application/octet-stream';
+    }
+
+    protected function client()
+    {
+        return new Client();
     }
 }

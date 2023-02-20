@@ -3,7 +3,7 @@
          bootstrap="tests/bootstrap.php"
          backupGlobals="false"
          colors="true"
-         processIsolation="false"
+         processIsolation="true"
          stopOnFailure="false"
          xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.0/phpunit.xsd"
          cacheDirectory=".phpunit.cache"

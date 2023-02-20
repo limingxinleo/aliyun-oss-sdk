@@ -16,6 +16,7 @@ use Fan\OSS\Kernel\Config;
 use Fan\OSS\Signer\Signer;
 use Fan\OSS\Signer\SignerProvider;
 use Fan\OSS\Uploader\Uploader;
+use Fan\OSS\Uploader\UploaderProvider;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -93,6 +94,7 @@ class Client implements ClientInterface
     {
         $providers = [
             'signer' => SignerProvider::class,
+            'uploader' => UploaderProvider::class,
         ];
 
         foreach ($providers as $name => $provider) {

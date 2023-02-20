@@ -47,4 +47,19 @@ class ClientTest extends AbstractTestCase
 
         $this->assertIsString($res);
     }
+
+    public function testUploaderPut()
+    {
+        $container = ContainerStub::mockContainer();
+        $client = new Client($container, [
+            'key' => 'xxx',
+            'secret' => 'xxx',
+            'endpoint' => 'https://oss-cn-hangzhou.aliyuncs.com',
+        ]);
+
+        $fp = fopen(__DIR__ . '/ClientTest.php', 'r+');
+        $res = $client->uploader->put('test', 'test.txt', $fp, ['http_errors' => false]);
+
+        $this->assertSame(403, $res->getStatusCode());
+    }
 }
