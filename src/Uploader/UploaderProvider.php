@@ -9,19 +9,16 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
-namespace HyperfTest;
+namespace Fan\OSS\Uploader;
 
-use Hyperf\Utils\ApplicationContext;
-use Mockery;
+use Fan\OSS\Client;
+use Fan\OSS\ServiceProviderInterface;
 use Psr\Container\ContainerInterface;
 
-class ContainerStub
+class UploaderProvider implements ServiceProviderInterface
 {
-    public static function mockContainer()
+    public function __invoke(ContainerInterface $container, Client $client)
     {
-        $container = Mockery::mock(ContainerInterface::class);
-        ApplicationContext::setContainer($container);
-
-        return $container;
+        return new Uploader($client->config, $client->signer);
     }
 }

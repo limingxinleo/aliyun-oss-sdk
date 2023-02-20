@@ -16,7 +16,7 @@ use Fan\OSS\Kernel\Config;
 
 class Signer
 {
-    protected $config;
+    protected Config $config;
 
     public function __construct(Config $config)
     {

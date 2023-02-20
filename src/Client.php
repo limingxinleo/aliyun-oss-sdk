@@ -15,11 +15,13 @@ use Fan\OSS\Exception\NotFoundException;
 use Fan\OSS\Kernel\Config;
 use Fan\OSS\Signer\Signer;
 use Fan\OSS\Signer\SignerProvider;
+use Fan\OSS\Uploader\Uploader;
 use Psr\Container\ContainerInterface;
 
 /**
  * @property Config $config
  * @property Signer $signer
+ * @property Uploader $uploader
  */
 class Client implements ClientInterface
 {

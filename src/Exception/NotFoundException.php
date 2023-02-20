@@ -11,6 +11,8 @@ declare(strict_types=1);
  */
 namespace Fan\OSS\Exception;
 
-class NotFoundException extends \RuntimeException
+use RuntimeException;
+
+class NotFoundException extends RuntimeException
 {
 }
