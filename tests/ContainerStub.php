@@ -11,7 +11,7 @@ declare(strict_types=1);
  */
 namespace HyperfTest;
 
-use Hyperf\Utils\ApplicationContext;
+use Hyperf\Context\ApplicationContext;
 use Mockery;
 use Psr\Container\ContainerInterface;
 

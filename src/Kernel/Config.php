@@ -11,29 +11,31 @@ declare(strict_types=1);
  */
 namespace Fan\OSS\Kernel;
 
-use Hyperf\Utils\Collection;
+use Hyperf\Collection\Collection;
+use InvalidArgumentException;
 
-/**
- * @property $items = [
- *     'key' => '',
- *     'secret' => '',
- *     'endpoint' => '',
- * ]
- */
 class Config extends Collection
 {
+    public function __construct($items = [])
+    {
+        if (! isset($items['key'], $items['secret'], $items['endpoint'])) {
+            throw new InvalidArgumentException();
+        }
+        parent::__construct($items);
+    }
+
     public function getKey(): string
     {
-        return $this->get('key');
+        return (string) $this->get('key');
     }
 
     public function getSecret(): string
     {
-        return $this->get('secret');
+        return (string) $this->get('secret');
     }
 
     public function getEndpoint(): string
     {
-        return $this->get('endpoint');
+        return (string) $this->get('endpoint');
     }
 }

@@ -35,10 +35,10 @@ class Client implements ClientInterface
 
     /**
      * @param $config = [
-     *     'key' => '', // AccessKeyId
-     *     'secret' => '', // AccessSecret
-     *     'endpoint' => '', // Endpoint
-     * ]
+     *                'key' => '', // AccessKeyId
+     *                'secret' => '', // AccessSecret
+     *                'endpoint' => '', // Endpoint
+     *                ]
      */
     public function __construct(ContainerInterface $container, array $config = [])
     {
